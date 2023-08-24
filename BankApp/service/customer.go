@@ -6,6 +6,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -30,6 +31,10 @@ func(c *Cust) CreateCustomer(user *models.Customer)(*mongo.InsertOneResult,error
 	_, err := c.mongoCollection.Indexes().CreateOne(c.ctx, indexModel)
 	if err != nil {
 		log.Fatal(err)
+	}
+	date := time.Now()
+	for i:=0;i<len(user.Transaction);i++{
+		user.Transaction[i].Date = date.Format("2006-01-02 12.50.00.000000000")
 	}
 	user.Customer_ID = primitive.NewObjectID()
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(user.Password),7)
@@ -82,6 +87,7 @@ func (c *Cust) CreateManyCustomer(post []*models.Customer)(*mongo.InsertManyResu
 	var users []interface{}
 	for _,user := range post{
 		user.Customer_ID = primitive.NewObjectID()
+	
 		hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(user.Password),8)
 		user.Password = string(hashedPassword)
 		users = append(users, user)

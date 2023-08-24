@@ -15,4 +15,5 @@ type IBank interface{
 	GetallCustomer()(*mongo.Cursor,error)
 	GetCustomerbyid(int64)(*mongo.Cursor,error)
 	GetBank()([]*models.Bank,error)
+	GetAllBankTransDate(string, string) ([]interface{}, error)
 }

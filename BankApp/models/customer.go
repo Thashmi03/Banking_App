@@ -1,6 +1,8 @@
 package models
 
 import (
+
+
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -11,9 +13,12 @@ type Customer struct {
 	Name        string             `json:"name" bson:"name"`
 	Account_ID  int64              `json:"account_id" bson:"account_id"`
 	Transaction []CustTransaction  `json:"transaction" bson:"transaction"`
-	Accounts	[]Account		   `json:"account" bson:"account"`
+	// Accounts	[]Account		   `json:"account" bson:"account"`
 }
 
 type CustTransaction struct {
-	Transaction_amount int64              `json:"transaction_amount" bson:"transaction_amount"`
+	Transaction_id     int64     `json:"transaction_id" bson:"transaction_id"`
+	Transaction_amount int64     `json:"transaction_amount" bson:"transaction_amount"`
+	Date               string     `json:"date" bson:"date"`
+	Transaction_type   string    `json:"transaction_type" bson:"transaction_type"`
 }

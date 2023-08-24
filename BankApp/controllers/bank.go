@@ -16,7 +16,10 @@ import (
 type BankController struct{
      BankService  interfaces.IBank
 }
-
+type Date struct{
+	From string `json:"from" bson:"from"`
+	To string `json:"to" bson:"to"`
+}
 
 func InitBankController(bankService interfaces.IBank) BankController {
     return BankController{bankService}
@@ -130,4 +133,15 @@ func (t*BankController)GetCustomerbyid(ctx *gin.Context){
 func (a *BankController)GetBank(ctx *gin.Context){
 	accounts,_:=a.BankService.GetBank()
 	ctx.JSON(http.StatusOK,accounts)
+}
+func (b *BankController) GetAllBankTransDate(ctx *gin.Context){
+	var date *Date
+	if err := ctx.ShouldBindJSON(&date); err != nil {
+		ctx.JSON(http.StatusBadGateway, gin.H{"status": "fail", "message": err.Error()})
+	}
+	res,err := b.BankService.GetAllBankTransDate(date.From,date.To)
+	if err!=nil{
+		ctx.JSON(http.StatusBadGateway, gin.H{"status": "fail", "message": err.Error()})
+	}
+	ctx.JSON(http.StatusCreated, gin.H{"status": "success", "data": res})
 }
