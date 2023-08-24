@@ -11,14 +11,16 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type BankController struct{
      BankService  interfaces.IBank
 }
 type Date struct{
-	From string `json:"from" bson:"from"`
-	To string `json:"to" bson:"to"`
+	From string `json:"from" `
+	To string `json:"to"`
+    Customer_id primitive.ObjectID `json:"id"`
 }
 
 func InitBankController(bankService interfaces.IBank) BankController {
@@ -139,7 +141,7 @@ func (b *BankController) GetAllBankTransDate(ctx *gin.Context){
 	if err := ctx.ShouldBindJSON(&date); err != nil {
 		ctx.JSON(http.StatusBadGateway, gin.H{"status": "fail", "message": err.Error()})
 	}
-	res,err := b.BankService.GetAllBankTransDate(date.From,date.To)
+	res,err := b.BankService.GetAllBankTransDate(date.From,date.To,date.Customer_id)
 	if err!=nil{
 		ctx.JSON(http.StatusBadGateway, gin.H{"status": "fail", "message": err.Error()})
 	}

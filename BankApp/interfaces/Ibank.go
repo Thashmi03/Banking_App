@@ -3,6 +3,7 @@ package interfaces
 import (
 	"bankDemo/models"
 
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -15,5 +16,5 @@ type IBank interface{
 	GetallCustomer()(*mongo.Cursor,error)
 	GetCustomerbyid(int64)(*mongo.Cursor,error)
 	GetBank()([]*models.Bank,error)
-	GetAllBankTransDate(string, string) ([]interface{}, error)
+	GetAllBankTransDate(string, string,primitive.ObjectID) ([]interface{}, error)
 }

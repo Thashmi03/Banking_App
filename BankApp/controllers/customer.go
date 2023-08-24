@@ -102,3 +102,14 @@ func (t *TransactionController)CreateManyCustomer(ctx *gin.Context){
     }
     ctx.JSON(http.StatusCreated, gin.H{"status": "success", "data": res})
 }
+func (b *TransactionController) GetAllBankTransSum(ctx *gin.Context){
+	var date *Date
+	if err := ctx.ShouldBindJSON(&date); err != nil {
+		ctx.JSON(http.StatusBadGateway, gin.H{"status": "fail", "message": err.Error()})
+	}
+	res,err := b.TransactionService.GetAllBankTransSum(date.From,date.To,date.Customer_id)
+	if err!=nil{
+		ctx.JSON(http.StatusBadGateway, gin.H{"status": "fail", "message": err.Error()})
+	}
+	ctx.JSON(http.StatusCreated, gin.H{"status": "success", "data": res})
+}

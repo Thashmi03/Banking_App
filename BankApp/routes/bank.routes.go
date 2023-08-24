@@ -16,4 +16,4 @@ func BankRoute(router *gin.Engine, controller controllers.BankController) {
 	router.GET("/api/banks/getbyid/:id", controller.GetCustomerbyid)
 	router.GET("/api/banks/getbank", controller.GetBank)
 	router.POST("/api/bank/transactiondetail", controller.GetAllBankTransDate)
-}
+	}

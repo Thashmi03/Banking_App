@@ -9,6 +9,7 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+
 	// "go.mongodb.org/mongo-driver/bson/primitive"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -75,6 +76,8 @@ func (c*Bank) GetallCustomer()(*mongo.Cursor,error){
 	}
 	return res,nil
 }
+
+
 func(a *Bank)GetBank()([]*models.Bank,error){
 	filter:=bson.D{}
 	options:=options.Find()
@@ -166,7 +169,7 @@ func (c *Bank) CreateManyBankid(post []*models.Bank)(*mongo.InsertManyResult,err
 	}
 	return res,nil
 }
-func (b *Bank) GetAllBankTransDate(date1 string, date2 string) ([]interface{}, error) {
+func (b *Bank) GetAllBankTransDate(date1 string, date2 string, id primitive.ObjectID) ([]interface{}, error) {
 	pipeline := []bson.M{
 		{"$lookup": bson.M{
 			"from":         "customer",
@@ -174,7 +177,9 @@ func (b *Bank) GetAllBankTransDate(date1 string, date2 string) ([]interface{}, e
 			"foreignField": "bank_id",
 			"as":           "transactionsBank",
 		},
+
 		},
+		
 	}
 	var bank []bson.M
 	res, err := b.mongoCollection.Aggregate(b.ctx, pipeline)
@@ -190,22 +195,28 @@ func (b *Bank) GetAllBankTransDate(date1 string, date2 string) ([]interface{}, e
 	for _, v := range bank {
 		// fmt.Println(v)
 		for _, v1 := range v["transactionsBank"].(primitive.A) {
-			p = append(p, v1.(primitive.M)["transaction"])
+			fmt.Println(v1.(primitive.M)["customer_id"])
+			if v1.(primitive.M)["customer_id"] == id{
+				p = append(p, v1.(primitive.M)["transaction"])
+				// fmt.Println(v1.(primitive.M)["transaction"])
+			}	
 		}
+		break
 	}
-	// fmt.Println(p)
+	
 	for _, t := range p {
 			t1 := t.(primitive.A)
 			for i := 0; i < len(t1); i++ {
 				date := t1[i].(primitive.M)["date"].(string)
 				// fmt.Println(date)
-				if date >= date1 && date<=date2{
+				if date >= date1 && date<=date2 {
 				// fmt.Println(t1[i])
 
 					x = append(x, t1[i])
 				}
 			}
 	}
-	fmt.Println(x)
+
+	// fmt.Println(x)
 	return x, nil
 }

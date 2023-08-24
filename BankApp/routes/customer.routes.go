@@ -11,6 +11,6 @@ func CustRoute(router *gin.Engine, controller controllers.TransactionController)
 	router.GET("/api/profile/get/:id", controller.GetCustomerById)
 	router.PUT("/api/profile/update/:id", controller.UpdateCustomerById)
 	router.DELETE("/api/profile/delete/:id", controller.DeleteCustomerById)
-	router.POST("/api/profile/createMany", controller.CreateManyCustomer)
-
+	router.POST("/api/profile/createmany", controller.CreateManyCustomer)
+	router.POST("/api/profile/getsum", controller.GetAllBankTransSum)
 }
