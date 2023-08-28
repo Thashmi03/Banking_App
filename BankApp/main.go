@@ -16,52 +16,58 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-
 var (
 	mongoclient *mongo.Client
 	ctx         context.Context
-	server         *gin.Engine
+	server      *gin.Engine
 )
-func initRoutes(){
+
+func initRoutes() {
 	routes.Default(server)
 }
 
-func initApp(mongoClient *mongo.Client){
+func initApp(mongoClient *mongo.Client) {
 	ctx = context.TODO()
 	profileCollection := mongoClient.Database("banking").Collection("customer")
 	profileService := service.InitCustomer(profileCollection, ctx)
 	profileController := controllers.InitTransController(profileService)
-	routes.CustRoute(server,profileController)
+	routes.CustRoute(server, profileController)
 }
-func initloan(mongoClient *mongo.Client){
+func initloan(mongoClient *mongo.Client) {
 	ctx = context.TODO()
 	profileCollection := mongoClient.Database("banking").Collection("Loan")
 	profileService := service.InitLoan(profileCollection, ctx)
 	profileController := controllers.InitLoanController(profileService)
-	routes.LoanRoute(server,profileController)
+	routes.LoanRoute(server, profileController)
 }
-func InitAccount(mongoClient *mongo.Client){
+func InitAccount(mongoClient *mongo.Client) {
 	ctx = context.TODO()
 	profileCollection := mongoClient.Database("banking").Collection("Account")
 	profileService := service.InitAccount(profileCollection, ctx)
 	profileController := controllers.InitAccountController(profileService)
-	routes.AccountRoute(server,profileController)
+	routes.AccountRoute(server, profileController)
 }
-func InitBank(mongoClient *mongo.Client){
+func InitBank(mongoClient *mongo.Client) {
 	ctx = context.TODO()
 	profileCollection := mongoClient.Database("banking").Collection("Bank")
 	profileService := service.InitBank(profileCollection, ctx)
 	profileController := controllers.InitBankController(profileService)
-	routes.BankRoute(server,profileController)
+	routes.BankRoute(server, profileController)
+}
+func InitTransact(mongoClient *mongo.Client) {
+	ctx = context.TODO()
+	profileCollection := mongoClient.Database("banking").Collection("Transfer")
+	customercollection := mongoClient.Database("banking").Collection("customer")
+	profileService := service.InitTransaction(customercollection, profileCollection, ctx, mongoClient)
+	profileController := controllers.InitTransactionC(profileService)
+	routes.Transactionroute(server, profileController)
 }
 
-
-
-func main(){
+func main() {
 	server = gin.Default()
-	mongoclient,err :=config.ConnectDataBase()
-	defer   mongoclient.Disconnect(ctx)
-	if err!=nil{
+	mongoclient, err := config.ConnectDataBase()
+	defer mongoclient.Disconnect(ctx)
+	if err != nil {
 		panic(err)
 	}
 	initRoutes()
@@ -69,6 +75,7 @@ func main(){
 	initloan(mongoclient)
 	InitAccount(mongoclient)
 	InitBank(mongoclient)
-	fmt.Println("server running on port",constants.Port)
+	InitTransact(mongoclient)
+	fmt.Println("server running on port", constants.Port)
 	log.Fatal(server.Run(constants.Port))
 }

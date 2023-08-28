@@ -12,6 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	// "go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type BankController struct{
@@ -137,6 +138,8 @@ func (a *BankController)GetBank(ctx *gin.Context){
 	ctx.JSON(http.StatusOK,accounts)
 }
 func (b *BankController) GetAllBankTransDate(ctx *gin.Context){
+    // id := ctx.Param("id")
+    // id1,_ := primitive.ObjectIDFromHex(id)
 	var date *Date
 	if err := ctx.ShouldBindJSON(&date); err != nil {
 		ctx.JSON(http.StatusBadGateway, gin.H{"status": "fail", "message": err.Error()})

@@ -13,5 +13,5 @@ type Icustomer interface {
 	GetCustomerById(primitive.ObjectID) (*models.Customer, error)
 	UpdateCustomerById(primitive.ObjectID, *models.Customer) (*mongo.UpdateResult, error)
 	DeleteCustomerById(primitive.ObjectID) (*mongo.DeleteResult, error)
-	GetAllBankTransSum(date1 string, date2 string, id primitive.ObjectID) (int64, error)
+	GetAllTransactionSum(primitive.ObjectID, string, string) (int64, error)
 }
